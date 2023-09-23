@@ -3,8 +3,8 @@ package database
 import (
 	"context"
 	"fmt"
-	"os"
 	"github.com/jackc/pgx/v5"
+	"os"
 )
 
 type db struct {
@@ -45,26 +45,25 @@ func (d *db) delete(query) {
 }
 
 func (d db) closeConnection() {
- 	d.conn.Close(context.Background())	
-} 
+	d.conn.Close(context.Background())
+}
 
 var DataBase *db
 
-func InitDB() db {
+func InitDB() {
 	if DataBase != nil {
-		return 
+		return
 	}
-	
+
 	// urlExample := "postgres://username:password@localhost:5432/database_name"
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 
-	
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
 	}
 
-	DataBase = db{conn}
+	DataBase := db{conn}
 
 	defer DataBase.closeConnection()
 }
