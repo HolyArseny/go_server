@@ -15,9 +15,8 @@ func main() {
 		HttpHandler: router.BuildRouter(),
 	}
 
-	// TODO: make db config/ review database pkg types, definitions, syntax
-	// dbConfig := "some"
-
 	database.InitDB()
+	defer database.DataBase.CloseConnection()
+
 	http.Start(httpConfig)
 }

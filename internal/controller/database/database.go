@@ -15,36 +15,37 @@ type db struct {
 func (d db) Read(query string) {
 	result, err := dbApi.Read(d.connector, query)
 	if err != nil {
-		fmt.Println("eror", err)
+		fmt.Println("read query eror: ", err)
 	}
-	fmt.Println(result)
+	fmt.Println("read query result", result)
 }
 
-// func (d db) create(query string) {
-// 	result, err := dbApi.Create(d.connector, query)
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return true, result
-// }
+func (d db) Create(query string) {
+	result, err := dbApi.Create(d.connector, query)
+	if err != nil {
+		fmt.Println("create query error: ", err)
+	}
+	fmt.Println("create query result", result)
+}
 
-// func (d db) update(query string) {
-// 	result, err := dbApi.Update(d.connector, query)
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return true, result
-// }
+func (d db) Update(query string) {
+	result, err := dbApi.Update(d.connector, query)
+	if err != nil {
+		fmt.Println("update query error: ", err)
+	}
+	fmt.Println("update query result: ", result)
+}
 
-// func (d db) delete(query string) {
-// 	result, err := dbApi.Delete(d.connector, query)
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return true, result
-// }
+func (d db) Delete(query string) {
+	result, err := dbApi.Delete(d.connector, query)
+	if err != nil {
+		fmt.Println("delet query error: ", err)
+	}
+	fmt.Println("delete query result: ", result)
+}
 
-func (d db) closeConnection() {
+func (d db) CloseConnection() {
+	println("DB CLOSE")
 	d.connector.Close(context.Background())
 }
 
@@ -52,9 +53,10 @@ var DataBase db
 
 func InitDB() {
 	println("DB INIT")
-	// if DataBase != nil {
-	// 	return
-	// }
+
+	if DataBase.connector != nil {
+		return
+	}
 
 	urlExample := "postgres://postgres:jncg8azx@localhost:5432/k_learn"
 	connector, err := pgx.Connect(context.Background(), urlExample)
@@ -65,6 +67,4 @@ func InitDB() {
 	}
 
 	DataBase = db{connector}
-
-	// defer DataBase.closeConnection()
 }
