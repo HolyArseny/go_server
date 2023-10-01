@@ -3,10 +3,9 @@ package database
 import (
 	"context"
 	"fmt"
-	"os"
-
 	"github.com/jackc/pgx/v5"
-	// dbApi "server_example/internal/controller/database/api"
+	"os"
+	dbApi "server_example/internal/controller/database/api"
 )
 
 type db struct {
@@ -21,14 +20,13 @@ type db struct {
 // 	return true, result
 // }
 
-// func (d db) read(query string) {
-// 	result, err := dbApi.Read(d.connector, query)
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return true, result
-
-// }
+func (d db) read(query string) {
+	result, err := dbApi.Read(d.connector, query)
+	if err != nil {
+		return false, err
+	}
+	return true, result
+}
 
 // func (d db) update(query string) {
 // 	result, err := dbApi.Update(d.connector, query)
