@@ -23,9 +23,9 @@ type db struct {
 func (d db) read(query string) {
 	result, err := dbApi.Read(d.connector, query)
 	if err != nil {
-		return false, err
+		fmt.Println("eror", err)
 	}
-	return true, result
+	fmt.Println(result)
 }
 
 // func (d db) update(query string) {
@@ -51,6 +51,7 @@ func (d db) closeConnection() {
 var DataBase *db
 
 func InitDB() {
+	println("DB INIT")
 	if DataBase != nil {
 		return
 	}
