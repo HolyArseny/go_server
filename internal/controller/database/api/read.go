@@ -1,6 +1,9 @@
 package api
 
-import "context"
+import (
+	"context"
+	"github.com/jackc/pgx/v5"
+)
 
 func Read(conn *pgx.Conn, query string) (string, error) {
 	var result string

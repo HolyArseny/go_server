@@ -1,9 +1,11 @@
 package api
 
-import "server_example/internal/controller/database"
+import (
+	database "server_example/internal/controller/database"
+)
 
 func GetRoute1() {
-	database.DataBase.read("select * from challenges;")
+	database.DataBase.Read("select name from users where id = 1;")
 	println("Get route 1")
 }
 

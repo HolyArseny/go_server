@@ -12,6 +12,14 @@ type db struct {
 	connector *pgx.Conn
 }
 
+func (d db) Read(query string) {
+	result, err := dbApi.Read(d.connector, query)
+	if err != nil {
+		fmt.Println("eror", err)
+	}
+	fmt.Println(result)
+}
+
 // func (d db) create(query string) {
 // 	result, err := dbApi.Create(d.connector, query)
 // 	if err != nil {
@@ -19,14 +27,6 @@ type db struct {
 // 	}
 // 	return true, result
 // }
-
-func (d db) read(query string) {
-	result, err := dbApi.Read(d.connector, query)
-	if err != nil {
-		fmt.Println("eror", err)
-	}
-	fmt.Println(result)
-}
 
 // func (d db) update(query string) {
 // 	result, err := dbApi.Update(d.connector, query)
@@ -48,13 +48,13 @@ func (d db) closeConnection() {
 	d.connector.Close(context.Background())
 }
 
-var DataBase *db
+var DataBase db
 
 func InitDB() {
 	println("DB INIT")
-	if DataBase != nil {
-		return
-	}
+	// if DataBase != nil {
+	// 	return
+	// }
 
 	urlExample := "postgres://postgres:jncg8azx@localhost:5432/k_learn"
 	connector, err := pgx.Connect(context.Background(), urlExample)
@@ -64,7 +64,7 @@ func InitDB() {
 		os.Exit(1)
 	}
 
-	DataBase := db{connector}
+	DataBase = db{connector}
 
-	defer DataBase.closeConnection()
+	// defer DataBase.closeConnection()
 }
