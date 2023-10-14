@@ -2,10 +2,10 @@ package api
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func Create(conn *pgx.Conn, query string) (string, error) {
+func Create(conn *pgxpool.Pool, query string) (string, error) {
 	var result string
 	err := conn.QueryRow(context.Background(), query).Scan(&result)
 

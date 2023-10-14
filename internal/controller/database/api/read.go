@@ -2,11 +2,12 @@ package api
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func Read(conn *pgx.Conn, query string) (string, error) {
+func Read(conn *pgxpool.Pool, query string) (string, error) {
 	var result string
+
 	err := conn.QueryRow(context.Background(), query).Scan(&result)
 
 	if err != nil {

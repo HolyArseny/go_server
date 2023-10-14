@@ -3,17 +3,17 @@ package database
 import (
 	"context"
 	"fmt"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"os"
 	dbApi "server_example/internal/controller/database/api"
 )
 
 type db struct {
-	connector *pgx.Conn
+	_pool *pgxpool.Pool
 }
 
 func (d db) Read(query string) {
-	result, err := dbApi.Read(d.connector, query)
+	result, err := dbApi.Read(d._pool, query)
 	if err != nil {
 		fmt.Println("read query eror: ", err)
 	}
@@ -21,7 +21,7 @@ func (d db) Read(query string) {
 }
 
 func (d db) Create(query string) {
-	result, err := dbApi.Create(d.connector, query)
+	result, err := dbApi.Create(d._pool, query)
 	if err != nil {
 		fmt.Println("create query error: ", err)
 	}
@@ -29,7 +29,7 @@ func (d db) Create(query string) {
 }
 
 func (d db) Update(query string) {
-	result, err := dbApi.Update(d.connector, query)
+	result, err := dbApi.Update(d._pool, query)
 	if err != nil {
 		fmt.Println("update query error: ", err)
 	}
@@ -37,7 +37,7 @@ func (d db) Update(query string) {
 }
 
 func (d db) Delete(query string) {
-	result, err := dbApi.Delete(d.connector, query)
+	result, err := dbApi.Delete(d._pool, query)
 	if err != nil {
 		fmt.Println("delet query error: ", err)
 	}
@@ -46,7 +46,22 @@ func (d db) Delete(query string) {
 
 func (d db) CloseConnection() {
 	println("DB CLOSE")
-	d.connector.Close(context.Background())
+	d._pool.Close()
+}
+
+func (d db) syncSchema() {
+	for _, schema := range Schemas {
+		fmt.Print("MIGRATING ", schema.name, "... ")
+
+		_, error := d._pool.Query(context.Background(), schema.query)
+
+		if error != nil {
+			fmt.Println("FAILED: ", error)
+			os.Exit(1)
+		}
+
+		fmt.Println("SUCCEED")
+	}
 }
 
 var DataBase db
@@ -54,12 +69,12 @@ var DataBase db
 func InitDB() {
 	println("DB INIT")
 
-	if DataBase.connector != nil {
+	if DataBase._pool != nil {
 		return
 	}
 
 	urlExample := "postgres://postgres:jncg8azx@localhost:5432/k_learn"
-	connector, err := pgx.Connect(context.Background(), urlExample)
+	connector, err := pgxpool.New(context.Background(), urlExample)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -67,4 +82,5 @@ func InitDB() {
 	}
 
 	DataBase = db{connector}
+	DataBase.syncSchema()
 }
