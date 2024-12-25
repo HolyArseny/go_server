@@ -5,20 +5,20 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-);
+)
 
 type Env struct {
 	HTTP_PORT string
 }
 
-func GetEnv () Env {
-	err := godotenv.Load();
+func GetEnv() Env {
+	err := godotenv.Load()
 
-  if err != nil {
-    log.Fatal("Error loading .env file")
-  }
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	config := Env{ HTTP_PORT: os.Getenv("HTTP_PORT") };
+	config := Env{HTTP_PORT: os.Getenv("HTTP_PORT")}
 
-	return config;
+	return config
 }

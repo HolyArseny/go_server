@@ -3,9 +3,11 @@ package database
 import (
 	"context"
 	"fmt"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"os"
 	dbApi "server_example/internal/controller/database/api"
+	dbModels "server_example/internal/controller/database/models"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type db struct {
@@ -50,10 +52,10 @@ func (d db) CloseConnection() {
 }
 
 func (d db) syncSchema() {
-	for _, schema := range Schemas {
-		fmt.Print("MIGRATING ", schema.name, "... ")
+	for _, schema := range dbModels.Schemas {
+		fmt.Print("MIGRATING ", schema.Name, "... ")
 
-		_, error := d._pool.Query(context.Background(), schema.query)
+		_, error := d._pool.Query(context.Background(), schema.Query)
 
 		if error != nil {
 			fmt.Println("FAILED: ", error)
